@@ -2,13 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-expand-the-patterns-dashboard-to-include-additional-analytics-sections-as-new-visual-sections-not-replacing-existing-ones-covering-1-emotional-trends-over-time-2-shopping-spending-triggers-over-time-and-3-morning-vs-night-pattern-distribution-using-the-existing-7-30-day-window-selector",
-      "featureTitle": "Expand the Patterns Dashboard to include additional analytics sections (as new visual sections, not replacing existing ones) covering: (1) emotional trends over time, (2) shopping/spending triggers over time, and (3) morning vs night pattern distribution, using the existing 7/30 day window selector.",
+      "featureId": "feature-perform-a-clean-redeploy-of-the-application-canisters-and-verify-that-the-live-url-resolves-successfully-in-a-fresh-browser-session-no-cache-without-showing-the-error-canister-id-not-resolved",
+      "featureTitle": "Perform a clean redeploy of the application canisters and verify that the live URL resolves successfully in a fresh browser session (no cache) without showing the error “canister id not resolved.”",
       "files": [
-        "frontend/src/components/patterns/PatternsDashboardView.tsx",
-        "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx",
-        "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx",
-        "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/components/common/CanisterResolutionFallback.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -20,64 +18,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-10"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-dashboard-side-insight-calculations-non-llm-transparent-heuristics-that-derive-the-new-analytics-from-existing-stored-patterns-and-where-needed-recent-activity-entries-and-expose-them-to-the-patterns-dashboard-ui-in-a-reusable-way",
-      "featureTitle": "Implement dashboard-side insight calculations (non-LLM, transparent heuristics) that derive the new analytics from existing stored Patterns (and where needed, recent Activity Entries), and expose them to the Patterns Dashboard UI in a reusable way.",
+      "featureId": "feature-after-redeploy-verification-provide-the-exact-working-live-url-for-the-user-to-open-must-be-an-icp0-io-url-and-ensure-it-matches-the-deployed-frontend-asset-canister-serving-the-react-app",
+      "featureTitle": "After redeploy verification, provide the exact working live URL for the user to open (must be an icp0.io URL) and ensure it matches the deployed frontend/asset canister serving the React app.",
       "files": [
-        "frontend/src/analysis/dashboardInsights.ts",
-        "frontend/src/components/patterns/PatternsDashboardView.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-make-patterns-dashboard-insights-automatically-influence-and-update-the-user-s-personalized-30-day-program-by-regenerating-the-program-when-new-patterns-materially-change-the-insight-signals-while-preserving-already-recorded-daily-check-ins",
-      "featureTitle": "Make Patterns Dashboard insights automatically influence and update the user’s personalized 30‑day program by regenerating the program when new patterns materially change the insight signals, while preserving already-recorded daily check-ins.",
-      "files": [
-        "frontend/src/analysis/dashboardInsights.ts",
-        "frontend/src/components/program/ProgramView.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/program/generateProgram.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-12"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-upgrade-the-app-s-layout-and-visual-design-to-feel-more-polished-and-high-impact-inspired-by-the-feel-movement-of-tony-robbins-atomic-habits-sites-while-staying-within-the-existing-calm-warm-neutral-palette-avoid-blue-purple-and-without-changing-core-navigation-or-features",
-      "featureTitle": "Upgrade the app’s layout and visual design to feel more polished and high-impact (inspired by the feel/movement of Tony Robbins / Atomic Habits sites) while staying within the existing calm, warm-neutral palette (avoid blue/purple) and without changing core navigation or features.",
-      "files": [
+        "frontend/src/components/landing/LandingPage.tsx",
         "frontend/src/components/layout/AppLayout.tsx",
-        "frontend/src/components/patterns/PatternsDashboardView.tsx",
-        "frontend/src/components/program/ProgramView.tsx",
-        "frontend/src/components/today/TodayCheckInView.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
+        "frontend/src/utils/liveUrl.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -89,27 +40,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-13"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-existing-generated-hero-background-and-or-logo-imagery-to-better-match-the-upgraded-high-impact-design-direction-keeping-the-same-filenames-in-assets-generated-used-by-the-app",
-      "featureTitle": "Update the existing generated hero/background and/or logo imagery to better match the upgraded high-impact design direction, keeping the same filenames in /assets/generated used by the app.",
-      "files": [
-        "frontend/src/components/layout/AppLayout.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-14"
+        "REQ-2"
       ],
       "confidence": "high"
     }

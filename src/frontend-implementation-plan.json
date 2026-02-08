@@ -1,155 +1,50 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Advanced dashboard insights, adaptive program updates, and high-impact warm-neutral design refresh",
+  "title": "Fix frontend initialization to prevent “canister id not resolved” on live load and surface the verified icp0.io link",
   "requirements": [
     {
-      "id": "REQ-10",
-      "summary": "Add three new visual analytics sections to Patterns Dashboard (Emotional trends, Spending/Shopping triggers over time, Morning vs Night distribution) that respond to the existing 7/30 day selector.",
+      "id": "REQ-1",
+      "summary": "Prevent the app from initializing backend/actor-dependent logic before authentication and add a user-visible fallback when canister resolution fails in a fresh session.",
       "acceptanceCriteria": [
-        "Patterns dashboard includes at least three new sections titled in clear English for: Emotional trends, Spending/Shopping triggers over time, and Morning vs Night patterns.",
-        "Each section updates when the user switches between “Last 7” and “Last 30”.",
-        "If there is insufficient data to compute a section, the UI shows a graceful empty-state message within that section (no crashes, no blank broken layouts)."
+        "After redeploy, the app is reachable at the live URL without displaying “canister id not resolved”.",
+        "Verification is done in an incognito/private window and after a hard refresh to avoid cached routing artifacts."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/patterns/PatternsDashboardView.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add three new dashboard sections beneath existing content, using existing shadcn-ui Card/Tabs primitives for consistent layout; render each section as a distinct visual block with an internal empty-state. Verify the component's usage instructions before implementing."
+          "description": "Refactor the top-level App to avoid running actor/profile queries during the unauthenticated landing experience (e.g., split into authenticated vs unauthenticated subtrees so the landing page never triggers backend config resolution). Also wire a lightweight runtime error fallback for canister-resolution/config errors so a fresh browser session does not surface an uncaught “canister id not resolved” screen."
         },
         {
-          "path": "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx",
+          "path": "frontend/src/components/common/CanisterResolutionFallback.tsx",
           "operation": "create",
-          "description": "Create a reusable section component that visualizes emotional trends over time (7/30 days) with a compact, warm-neutral mini-chart (e.g., bars/stacked rows) and an in-section empty-state message. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx",
-          "operation": "create",
-          "description": "Create a reusable section component that visualizes shopping/spending trigger counts over time (7/30 days) with a compact mini-chart and an in-section empty-state message. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx",
-          "operation": "create",
-          "description": "Create a reusable section component that visualizes morning vs night distribution (7/30 days) as a split bar / ratio visualization with an in-section empty-state message. Verify the component's usage instructions before implementing."
+          "description": "Create a small, English-only fallback component that renders a friendly explanation and recovery steps (hard refresh, open in a new private window, ensure using the provided icp0.io link) when the app detects/catches canister resolution/config initialization errors."
         }
       ]
     },
     {
-      "id": "REQ-11",
-      "summary": "Implement deterministic, reusable frontend insight calculations for the new dashboard sections using existing stored Patterns and Activity Entries (no new backend capabilities).",
+      "id": "REQ-2",
+      "summary": "Expose a single, exact icp0.io live URL in the UI and ensure the landing page loads correctly at that URL.",
       "acceptanceCriteria": [
-        "Insight calculations are deterministic and explainable (rule/keyword/time-bucket based), not dependent on any external services.",
-        "Insight calculations run only on available app data (stored patterns and entries) and do not require new backend endpoints.",
-        "The existing top-level dashboard summary (total patterns / pattern types / avg confidence / top types / common snippets) continues to work unchanged."
+        "A single, exact URL is produced for the user to open.",
+        "Opening the provided URL loads the React landing page (unauthenticated experience) rather than a resolution error."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/analysis/dashboardInsights.ts",
+          "path": "frontend/src/utils/liveUrl.ts",
           "operation": "create",
-          "description": "Add explainable heuristics to compute: (1) emotional trends over time, (2) shopping/spending trigger trends over time, and (3) morning vs night distribution, using keyword/rule matching against Activity Entries and time-bucketing by day; expose typed functions reusable by the dashboard and program regeneration logic."
+          "description": "Add a small utility that derives the canonical live URL from the current location (prefer icp0.io when applicable) and returns a single exact URL string suitable for display/copy."
         },
         {
-          "path": "frontend/src/components/patterns/PatternsDashboardView.tsx",
+          "path": "frontend/src/components/landing/LandingPage.tsx",
           "operation": "modify",
-          "description": "Wire the new insight calculation helpers to the 7/30 selector and pass computed datasets into the new insight section components while leaving existing summarizePatterns-based summary blocks unchanged. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "summary": "Automatically regenerate the active 30-day program when insight signals materially change, while preserving existing daily check-ins and avoiding updates when no program exists.",
-      "acceptanceCriteria": [
-        "When patterns change (e.g., after adding new patterns), the app can regenerate the 30‑day program using the newest insight signals without requiring the user to manually recreate it.",
-        "Any existing check-ins already stored for specific days remain present after an automatic program update.",
-        "If the user has no active program yet, the app does not attempt automatic updates and instead behaves as it does today (user can create a program)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add a React Query mutation hook that calls the existing backendInterface updateFullProgram capability and invalidates the cached program query afterwards."
-        },
-        {
-          "path": "frontend/src/program/generateProgram.ts",
-          "operation": "modify",
-          "description": "Update program generation to accept a small, deterministic 'insight signals' input (derived from dashboardInsights) so regenerated programs reflect the newest signals while keeping behavior stable and explainable."
-        },
-        {
-          "path": "frontend/src/components/program/ProgramView.tsx",
-          "operation": "modify",
-          "description": "Implement an automatic update effect: when an active program exists and patterns/entries-derived insight signature changes materially, regenerate the 30-day plan and call updateFullProgram with new days plus the existing stored check-ins preserved; persist the last applied insight signature locally to prevent thrashing; do nothing when program is null. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/analysis/dashboardInsights.ts",
-          "operation": "modify",
-          "description": "Add an 'insight signature' helper (stable serialization/hash of key signals and time window) and a 'material change' comparator used by ProgramView to decide when to regenerate."
-        }
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "summary": "Refresh layout/visual design to a more polished, high-impact editorial feel with subtle motion while keeping the warm-neutral palette and existing navigation/features.",
-      "acceptanceCriteria": [
-        "Typography and spacing are updated to feel more editorial/high-impact (clear hierarchy, stronger section headers) while retaining readability.",
-        "Subtle motion is added using safe CSS/Tailwind animations/transitions (e.g., hover, section reveal, tab transitions) without introducing new frameworks or real-time features.",
-        "App remains fully usable on mobile widths; navigation and primary actions remain obvious and accessible.",
-        "No user-facing text is introduced in any language other than English."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/layout/AppLayout.tsx",
-          "operation": "modify",
-          "description": "Upgrade header and content framing to a higher-impact look (stronger typographic hierarchy, improved spacing, refined nav affordances), and introduce subtle transitions/hover states while keeping the existing navigation items and overall IA intact. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/patterns/PatternsDashboardView.tsx",
-          "operation": "modify",
-          "description": "Tighten dashboard spacing, section headers, and card composition to feel more editorial/high-impact; add subtle, safe transitions for window switching and section hover states (Tailwind transitions only). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/program/ProgramView.tsx",
-          "operation": "modify",
-          "description": "Refine program grid/card styling and micro-interactions (hover/press, focus rings) to match the upgraded design direction without changing features or navigation. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/today/TodayCheckInView.tsx",
-          "operation": "modify",
-          "description": "Polish typography and spacing for the check-in flow, improve visual hierarchy (day marker, task title, form sections), and add subtle transitions while maintaining mobile usability. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Adjust global typographic defaults (e.g., smoothing, heading rhythm via utility-friendly base styles) and refine warm-neutral theme variables to increase contrast/impact while avoiding blue/purple dominance."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Extend Tailwind with a small set of warm-neutral-friendly animations/keyframes (e.g., subtle fade/slide reveal) and shadow/spacing tokens used by the refreshed layout (no new styling frameworks)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "summary": "Update existing generated hero/background and logo imagery to match the upgraded high-impact warm-neutral design direction while keeping the same filenames and paths referenced by the UI.",
-      "acceptanceCriteria": [
-        "If imagery is modified, the app continues to load images from the same existing asset paths currently referenced by the UI.",
-        "Updated imagery remains in a warm neutral / earthy palette consistent with the current theme variables (no dominant blue/purple look)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/assets/generated/map-hero-bg.dim_1600x900.png",
-          "operation": "modify",
-          "description": "Replace the existing generated hero/background image with an updated version that increases contrast and adds dynamic abstract movement while retaining earthy warm-neutral tones; keep the exact same filename and location so existing UI references continue to work."
-        },
-        {
-          "path": "frontend/public/assets/generated/map-logo.dim_512x512.png",
-          "operation": "modify",
-          "description": "Replace the existing generated logo/mark with a bolder, more premium warm-neutral version; keep the exact same filename and location so existing UI references continue to work."
+          "description": "Integrate the live-URL utility to display the exact icp0.io URL (with a copy-to-clipboard action) on the landing page, ensuring the unauthenticated experience can be verified by opening that one link."
         },
         {
           "path": "frontend/src/components/layout/AppLayout.tsx",
           "operation": "modify",
-          "description": "Ensure the refreshed layout continues referencing the same generated asset paths (including the logo path already used) and optionally integrate the updated hero/background image into the layout without introducing new routes or navigation. Verify the component's usage instructions before implementing."
+          "description": "Optionally mirror the same canonical icp0.io URL display in the authenticated layout footer/help area so the user can always retrieve the verified live link after redeploy."
         }
       ]
     }

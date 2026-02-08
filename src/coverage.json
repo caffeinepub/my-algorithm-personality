@@ -1,95 +1,40 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T01:50:44.479Z",
+  "generatedAt": "2026-02-08T03:01:12.739Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
-    "implemented": 5,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Expand the Patterns Dashboard to include additional analytics sections (as new visual sections, not replacing existing ones) covering: (1) emotional trends over time, (2) shopping/spending triggers over time, and (3) morning vs night pattern distribution, using the existing 7/30 day window selector.",
+        "id": "REQ-1",
+        "summary": "Perform a clean redeploy of the application canisters and verify that the live URL resolves successfully in a fresh browser session (no cache) without showing the error “canister id not resolved.”",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/patterns/PatternsDashboardView.tsx",
-          "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx",
-          "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx",
-          "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/components/common/CanisterResolutionFallback.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/patterns/PatternsDashboardView.tsx",
-          "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx",
-          "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx",
-          "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/components/common/CanisterResolutionFallback.tsx"
         ]
       },
       {
-        "id": "REQ-11",
-        "summary": "Implement dashboard-side insight calculations (non-LLM, transparent heuristics) that derive the new analytics from existing stored Patterns (and where needed, recent Activity Entries), and expose them to the Patterns Dashboard UI in a reusable way.",
+        "id": "REQ-2",
+        "summary": "After redeploy verification, provide the exact working live URL for the user to open (must be an icp0.io URL) and ensure it matches the deployed frontend/asset canister serving the React app.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/analysis/dashboardInsights.ts",
-          "frontend/src/components/patterns/PatternsDashboardView.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/analysis/dashboardInsights.ts",
-          "frontend/src/components/patterns/PatternsDashboardView.tsx"
-        ]
-      },
-      {
-        "id": "REQ-12",
-        "summary": "Make Patterns Dashboard insights automatically influence and update the user’s personalized 30‑day program by regenerating the program when new patterns materially change the insight signals, while preserving already-recorded daily check-ins.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/program/generateProgram.ts",
-          "frontend/src/components/program/ProgramView.tsx",
-          "frontend/src/analysis/dashboardInsights.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/program/generateProgram.ts",
-          "frontend/src/components/program/ProgramView.tsx",
-          "frontend/src/analysis/dashboardInsights.ts"
-        ]
-      },
-      {
-        "id": "REQ-13",
-        "summary": "Upgrade the app’s layout and visual design to feel more polished and high-impact (inspired by the feel/movement of Tony Robbins / Atomic Habits sites) while staying within the existing calm, warm-neutral palette (avoid blue/purple) and without changing core navigation or features.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/layout/AppLayout.tsx",
-          "frontend/src/components/patterns/PatternsDashboardView.tsx",
-          "frontend/src/components/program/ProgramView.tsx",
-          "frontend/src/components/today/TodayCheckInView.tsx",
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/layout/AppLayout.tsx",
-          "frontend/src/components/patterns/PatternsDashboardView.tsx",
-          "frontend/src/components/program/ProgramView.tsx",
-          "frontend/src/components/today/TodayCheckInView.tsx",
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ]
-      },
-      {
-        "id": "REQ-14",
-        "summary": "Update the existing generated hero/background and/or logo imagery to better match the upgraded high-impact design direction, keeping the same filenames in /assets/generated used by the app.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/assets/generated/map-hero-bg.dim_1600x900.png",
-          "frontend/public/assets/generated/map-logo.dim_512x512.png",
+          "frontend/src/utils/liveUrl.ts",
+          "frontend/src/components/landing/LandingPage.tsx",
           "frontend/src/components/layout/AppLayout.tsx"
         ],
         "matchedFiles": [
-          "frontend/public/assets/generated/map-hero-bg.dim_1600x900.png",
-          "frontend/public/assets/generated/map-logo.dim_512x512.png",
+          "frontend/src/utils/liveUrl.ts",
+          "frontend/src/components/landing/LandingPage.tsx",
           "frontend/src/components/layout/AppLayout.tsx"
         ]
       }
@@ -97,30 +42,15 @@
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/map-hero-bg.dim_1600x900.png",
-    "frontend/public/assets/generated/map-logo.dim_512x512.png",
-    "frontend/src/analysis/dashboardInsights.ts",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
+    "frontend/src/App.tsx",
+    "frontend/src/components/common/CanisterResolutionFallback.tsx",
+    "frontend/src/components/landing/LandingPage.tsx",
     "frontend/src/components/layout/AppLayout.tsx",
-    "frontend/src/components/patterns/PatternsDashboardView.tsx",
-    "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx",
-    "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx",
-    "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx",
-    "frontend/src/components/program/ProgramView.tsx",
-    "frontend/src/components/today/TodayCheckInView.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/program/generateProgram.ts",
-    "frontend/tailwind.config.js",
+    "frontend/src/utils/liveUrl.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

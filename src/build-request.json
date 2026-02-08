@@ -1,120 +1,56 @@
 {
   "kind": "build_request",
-  "title": "Add advanced Patterns Dashboard insights, adaptive program updates, and a more polished high-impact layout",
-  "priority": "normal",
+  "title": "Resolve live deployment showing 'canister id not resolved' and provide a verified live link",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-10",
-      "text": "Expand the Patterns Dashboard to include additional analytics sections (as new visual sections, not replacing existing ones) covering: (1) emotional trends over time, (2) shopping/spending triggers over time, and (3) morning vs night pattern distribution, using the existing 7/30 day window selector.",
-      "target": "frontend",
+      "id": "REQ-1",
+      "text": "Perform a clean redeploy of the application canisters and verify that the live URL resolves successfully in a fresh browser session (no cache) without showing the error “canister id not resolved.”",
+      "target": "unknown",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "additional analytics (e.g., emotional trends, spending triggers over time, morning vs night patterns)",
-          "insights appear as new visual sections on the existing dashboard"
+          "says canister id not resolved",
+          "yes"
         ]
       },
       "acceptanceCriteria": [
-        "Patterns dashboard includes at least three new sections titled in clear English for: Emotional trends, Spending/Shopping triggers over time, and Morning vs Night patterns.",
-        "Each section updates when the user switches between “Last 7” and “Last 30”.",
-        "If there is insufficient data to compute a section, the UI shows a graceful empty-state message within that section (no crashes, no blank broken layouts)."
+        "After redeploy, the app is reachable at the live URL without displaying “canister id not resolved”.",
+        "Verification is done in an incognito/private window and after a hard refresh to avoid cached routing artifacts."
       ]
     },
     {
-      "id": "REQ-11",
-      "text": "Implement dashboard-side insight calculations (non-LLM, transparent heuristics) that derive the new analytics from existing stored Patterns (and where needed, recent Activity Entries), and expose them to the Patterns Dashboard UI in a reusable way.",
-      "target": "frontend",
+      "id": "REQ-2",
+      "text": "After redeploy verification, provide the exact working live URL for the user to open (must be an icp0.io URL) and ensure it matches the deployed frontend/asset canister serving the React app.",
+      "target": "unknown",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "different insights",
-          "additional analytics (e.g., emotional trends, spending triggers over time, morning vs night patterns)"
+          "live link"
         ]
       },
       "acceptanceCriteria": [
-        "Insight calculations are deterministic and explainable (rule/keyword/time-bucket based), not dependent on any external services.",
-        "Insight calculations run only on available app data (stored patterns and entries) and do not require new backend endpoints.",
-        "The existing top-level dashboard summary (total patterns / pattern types / avg confidence / top types / common snippets) continues to work unchanged."
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Make Patterns Dashboard insights automatically influence and update the user’s personalized 30‑day program by regenerating the program when new patterns materially change the insight signals, while preserving already-recorded daily check-ins.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "i want the insights to influence the personalized 30‑day program automatically"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When patterns change (e.g., after adding new patterns), the app can regenerate the 30‑day program using the newest insight signals without requiring the user to manually recreate it.",
-        "Any existing check-ins already stored for specific days remain present after an automatic program update.",
-        "If the user has no active program yet, the app does not attempt automatic updates and instead behaves as it does today (user can create a program)."
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "text": "Upgrade the app’s layout and visual design to feel more polished and high-impact (inspired by the feel/movement of Tony Robbins / Atomic Habits sites) while staying within the existing calm, warm-neutral palette (avoid blue/purple) and without changing core navigation or features.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "make the layout appealing with a great graphic design",
-          "look at other websites like tony robbins or atomic habits for inspiration on feel and movement of applications"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Typography and spacing are updated to feel more editorial/high-impact (clear hierarchy, stronger section headers) while retaining readability.",
-        "Subtle motion is added using safe CSS/Tailwind animations/transitions (e.g., hover, section reveal, tab transitions) without introducing new frameworks or real-time features.",
-        "App remains fully usable on mobile widths; navigation and primary actions remain obvious and accessible.",
-        "No user-facing text is introduced in any language other than English."
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "text": "Update the existing generated hero/background and/or logo imagery to better match the upgraded high-impact design direction, keeping the same filenames in /assets/generated used by the app.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "great graphic design",
-          "inspiration on feel and movement of applications"
-        ]
-      },
-      "acceptanceCriteria": [
-        "If imagery is modified, the app continues to load images from the same existing asset paths currently referenced by the UI.",
-        "Updated imagery remains in a warm neutral / earthy palette consistent with the current theme variables (no dominant blue/purple look)."
+        "A single, exact URL is produced for the user to open.",
+        "Opening the provided URL loads the React landing page (unauthenticated experience) rather than a resolution error."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services.",
-    "Do not edit files under frontend/src/components/ui or any path listed in frontend.immutablePaths (compose existing UI components instead).",
-    "No external AI/LLM integrations or third-party auth providers; Internet Identity only.",
-    "Avoid blue/purple as primary theme colors."
+    "Use English for any user-facing text.",
+    "Do not modify files in frontend immutablePaths (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui)."
   ],
   "nonGoals": [
-    "Adding new data ingestion sources (e.g., direct social media APIs) beyond existing paste/upload flow.",
-    "Introducing real-time features (websockets/chat/notifications).",
-    "Changing the app’s core information architecture beyond visual/layout refinements (no new top-level navigation sections required)."
+    "Adding new product features unrelated to deployment reachability.",
+    "Introducing external services, third-party auth providers, or non-Internet-Identity login."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": [
-      "Increase contrast and add more dynamic, high-impact abstract movement while keeping earthy tones (map-hero-bg.dim_1600x900.png > map-hero-bg.dim_1600x900.png)",
-      "Refine the mark/wordmark for a bolder, more premium look in warm neutrals (map-logo.dim_512x512.png > map-logo.dim_512x512.png)"
-    ]
+    "edits": []
   },
   "userProfileUpdate": {
     "goalsToAdd": [],

@@ -1,78 +1,63 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T01:50:44.475Z",
-  "summary": "Diff adds new dashboard insight computations and three new dashboard sections, plus automatic 30‑day program regeneration based on insight signatures and a refreshed layout/theme. However, some REQ-10/13/14 acceptance details appear unmet or conflicted (notably the required “Morning vs Night” section naming/focus and the “avoid blue/purple” palette constraint), and imagery updates are not evidenced in the diff summary.",
+  "generatedAt": "2026-02-08T03:01:12.736Z",
+  "summary": "The diff adds frontend UI helpers (a canister-resolution fallback screen and live URL derivation/copy UI) and includes backend/frontend changes unrelated to redeploy/verification. It does not contain evidence of a clean canister redeploy, verification in a fresh session, or a single explicit icp0.io live URL being produced as requested.",
   "missing_requirements": [
     {
-      "id": "REQ-10",
-      "requirement": "Patterns dashboard must include a section specifically for “Morning vs Night” pattern distribution (titled clearly in English as Morning vs Night patterns), and it must update with the existing 7/30 day selector.",
-      "reason": "The added section is titled “Time-of-Day Distribution” and includes morning/afternoon/evening/night, not a clearly-labeled “Morning vs Night patterns” section as specified.",
+      "id": "REQ-1",
+      "requirement": "Perform a clean redeploy of the application canisters and verify that the live URL resolves successfully in a fresh browser session (no cache) without showing the error “canister id not resolved.”",
+      "reason": "The diff only shows code changes; there is no evidence of redeployment actions or verification steps/results (incognito/private window, hard refresh) in the provided changes.",
       "evidence": [
-        "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx",
-        "frontend/src/components/patterns/PatternsDashboardView.tsx"
+        "project_state.json (AR-1 status: pending)",
+        "No deployment scripts/logs/commands included in diff summary"
       ]
     },
     {
-      "id": "REQ-10",
-      "requirement": "Add a section for “Shopping/Spending triggers over time” as a new visual section (not replacing existing ones).",
-      "reason": "A “Shopping & Spending Triggers” section is added, but the diff summary does not show an over-time visualization (e.g., time series/bucketed display); the shown UI focuses on totals, average, trend, and peak day. Since the file is truncated, this is inconclusive, but there is no evidence of an over-time visual treatment in the provided excerpt.",
+      "id": "REQ-2",
+      "requirement": "After redeploy verification, provide the exact working live URL for the user to open (must be an icp0.io URL) and ensure it matches the deployed frontend/asset canister serving the React app.",
+      "reason": "No single explicit icp0.io URL is provided/recorded in the diff. The code derives a URL from the current browser location, but that does not satisfy the requirement to provide the exact verified working live link matching the deployed asset canister.",
       "evidence": [
-        "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx"
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "requirement": "Avoid blue/purple as primary theme colors while upgrading layout/visual design.",
-      "reason": "The time-distribution section explicitly uses purple and blue visual accents (e.g., `bg-purple-500`, `bg-blue-500`, and blue-toned callouts), and theme chart variables include hues likely in blue/purple ranges; this conflicts with the “avoid blue/purple” constraint.",
-      "evidence": [
-        "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx",
-        "frontend/src/index.css"
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "requirement": "Update hero/background and/or logo imagery in /assets/generated, keeping the same filenames and warm neutral/earthy palette.",
-      "reason": "The diff summary shows the app still references the existing generated asset filenames, but it does not show any modified image assets under `/assets/generated`, so there’s no evidence the imagery itself was updated.",
-      "evidence": [
-        "frontend/src/components/layout/AppLayout.tsx"
+        "frontend/src/utils/liveUrl.ts (derives URL; does not specify a concrete deployed icp0.io URL)",
+        "project_state.json (AR-2 status: pending)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Introduced a backend migration module/file and wired it into the main actor.",
-      "reason": "BuildRequest constraints specify the backend must remain a single Motoko actor in `backend/main.mo` and not introduce additional backend services/files; adding `backend/migration.mo` and referencing it appears unrequested and potentially conflicts with that constraint.",
+      "description": "Added a dedicated UI fallback screen for canister ID resolution errors, including refresh/open-in-new-window actions and troubleshooting steps.",
+      "reason": "BuildRequest asks for redeploy + verified live link, not new UI/UX error handling features.",
       "evidence": [
-        "backend/migration.mo",
-        "backend/main.mo"
+        "frontend/src/components/common/CanisterResolutionFallback.tsx",
+        "frontend/src/App.tsx (adds global window error listener and renders fallback when triggered)"
       ]
     },
     {
-      "description": "Added outbound footer branding/link (“Built with ❤️ using caffeine.ai”).",
-      "reason": "Not requested by any requirement; adds new external branding/link in the UI.",
+      "description": "Implemented live URL derivation and clipboard copy helpers and surfaced the live URL in the landing page (and layout).",
+      "reason": "BuildRequest requires providing a single exact verified icp0.io URL after redeploy; it does not request adding in-app URL display/copy utilities.",
       "evidence": [
+        "frontend/src/utils/liveUrl.ts",
+        "frontend/src/components/landing/LandingPage.tsx",
         "frontend/src/components/layout/AppLayout.tsx"
+      ]
+    },
+    {
+      "description": "Backend authorization/storage and application logic changes unrelated to deployment reachability.",
+      "reason": "Non-goal: avoid adding new product features unrelated to deployment reachability; backend feature/logic changes are not requested by REQ-1/REQ-2.",
+      "evidence": [
+        "backend/main.mo"
       ]
     }
   ],
-  "confidence": 0.72,
+  "confidence": 0.82,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/analysis/dashboardInsights.ts",
+    "frontend/src/App.tsx",
+    "frontend/src/components/common/CanisterResolutionFallback.tsx",
+    "frontend/src/components/landing/LandingPage.tsx",
     "frontend/src/components/layout/AppLayout.tsx",
-    "frontend/src/components/patterns/PatternsDashboardView.tsx",
-    "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx",
-    "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx",
-    "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx",
-    "frontend/src/components/program/ProgramView.tsx",
-    "frontend/src/components/today/TodayCheckInView.tsx",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/program/generateProgram.ts",
-    "frontend/tailwind.config.js",
+    "frontend/src/utils/liveUrl.ts",
     "project_state.json"
   ]
 }

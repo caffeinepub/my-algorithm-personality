@@ -1,10 +1,10 @@
 {
-  "frontend/src/App.tsx": "Main application component with authentication gating, profile setup, onboarding flow, and view routing for Today, Entries, Patterns, Program, and Library views.",
+  "frontend/src/App.tsx": "Main application component with separated authenticated/unauthenticated rendering trees, error boundary for canister resolution failures, and proper actor initialization gating to prevent backend calls before authentication.",
   "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including new useUpdateFullProgram mutation for automatic program regeneration with preserved check-ins.",
   "frontend/src/components/auth/LoginButton.tsx": "Login/logout button component using Internet Identity with loading states and query cache clearing on logout.",
   "frontend/src/components/auth/ProfileSetupModal.tsx": "Modal dialog for first-time user profile setup requiring name input before accessing the app.",
   "frontend/src/components/common/AccessDeniedScreen.tsx": "Landing screen for unauthenticated users with login prompt and welcome message.",
-  "frontend/src/components/layout/AppLayout.tsx": "Main layout with elevated header design, sticky navigation with backdrop blur, improved logo presentation, and refined footer with better spacing and typography hierarchy.",
+  "frontend/src/components/layout/AppLayout.tsx": "Main authenticated layout with elevated header design, sticky navigation with backdrop blur, improved logo presentation, and refined footer displaying the live icp0.io URL with copy-to-clipboard action.",
   "frontend/src/components/onboarding/OnboardingDialog.tsx": "First-use onboarding dialog explaining the app's capabilities, workflow, and MVP limitations with dismissible state.",
   "frontend/src/components/entries/AddEntryView.tsx": "Form for adding new activity entries with text input, source label selection, optional notes, and image attachment support.",
   "frontend/src/components/entries/EntriesListView.tsx": "List view of user's activity entries with timestamps, source labels, and navigation to entry details or add new entry.",
@@ -26,5 +26,8 @@
   "frontend/src/analysis/dashboardInsights.ts": "Deterministic insight calculation functions for emotional trends, spending triggers, time-of-day distribution, insight signature generation, and change detection using keyword-based heuristics on patterns and entries.",
   "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx": "Dashboard section component displaying emotional sentiment distribution (positive/negative/neutral) with visual indicators and empty state handling.",
   "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx": "Dashboard section component showing shopping/spending trigger frequency over time with trend analysis, peak day detection, and high-exposure warnings.",
-  "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx": "Dashboard section component visualizing activity distribution across four time periods (morning/afternoon/evening/night) with color-coded progress bars and peak activity insights."
+  "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx": "Dashboard section component visualizing activity distribution across four time periods (morning/afternoon/evening/night) with color-coded progress bars and peak activity insights.",
+  "frontend/src/components/landing/LandingPage.tsx": "Full-featured landing page for unauthenticated users with polished privacy-first narrative, hero section with background image, three-pillar philosophy, quote blocks, explicit consent messaging, multiple login CTAs, and live URL display with copy-to-clipboard functionality.",
+  "frontend/src/components/common/CanisterResolutionFallback.tsx": "Fallback component that displays friendly error recovery instructions when canister resolution fails, including hard refresh steps, URL verification, and troubleshooting guidance.",
+  "frontend/src/utils/liveUrl.ts": "Utility functions for deriving the canonical icp0.io live URL from the current location and copying it to clipboard."
 }

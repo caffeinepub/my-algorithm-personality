@@ -1,7 +1,9 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Home, FileText, TrendingUp, Calendar, BookOpen } from 'lucide-react';
+import { Home, FileText, TrendingUp, Calendar, BookOpen, Copy, Check, ExternalLink } from 'lucide-react';
 import LoginButton from '../auth/LoginButton';
+import { getLiveUrl, copyLiveUrlToClipboard } from '@/utils/liveUrl';
+import { toast } from 'sonner';
 
 type View = 'today' | 'entries' | 'add-entry' | 'patterns' | 'program' | 'library';
 
@@ -12,12 +14,26 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children, currentView, onNavigate }: AppLayoutProps) {
+  const [copied, setCopied] = useState(false);
+  const liveUrl = getLiveUrl();
+
   const navItems = [
     { id: 'today' as View, label: 'Today', icon: Home },
     { id: 'entries' as View, label: 'Entries', icon: FileText },
     { id: 'patterns' as View, label: 'Patterns', icon: TrendingUp },
     { id: 'program' as View, label: 'Program', icon: Calendar },
   ];
+
+  const handleCopyUrl = async () => {
+    const success = await copyLiveUrlToClipboard();
+    if (success) {
+      setCopied(true);
+      toast.success('Live URL copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
+    } else {
+      toast.error('Failed to copy URL');
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -79,16 +95,37 @@ export default function AppLayout({ children, currentView, onNavigate }: AppLayo
 
       {/* Footer */}
       <footer className="border-t border-border/40 bg-card/30 backdrop-blur-sm py-8">
-        <div className="container px-6 text-center text-sm text-muted-foreground">
-          © 2026. Built with ❤️ using{' '}
-          <a
-            href="https://caffeine.ai"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold underline underline-offset-4 hover:text-foreground transition-colors"
-          >
-            caffeine.ai
-          </a>
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-muted-foreground text-center md:text-left">
+              © 2026. Built with ❤️ using{' '}
+              <a
+                href="https://caffeine.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                caffeine.ai
+              </a>
+            </div>
+            
+            {/* Live URL in Footer */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span className="hidden sm:inline">Live at:</span>
+              <code className="px-2 py-1 bg-muted rounded text-xs font-mono max-w-[200px] truncate" title={liveUrl}>
+                {liveUrl}
+              </code>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCopyUrl}
+                className="h-7 w-7 p-0"
+                title="Copy URL"
+              >
+                {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              </Button>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
