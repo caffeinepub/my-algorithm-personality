@@ -1,0 +1,122 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-08T01:24:38.191Z",
+  "summary": "The diff implements a significant portion of the MVP: Internet Identity-gated UI shell with onboarding, entry add/list/detail with optional image attachment, heuristic pattern detection (5+ types), habit library data + seeding flow, program generation UI, and a today check-in UI. However, several acceptance-criteria details are either missing or not evidenced in the diff summary (notably pattern metadata fields, entry-scoped pattern storage/cross-linking, mood trend visualization, and backend stable persistence/upgrade safety).",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Each detected pattern includes: type, title, short explanation, confidence (0–100), and 1–3 supporting snippets/keywords from the user text.",
+      "reason": "The shown detection output and backend Pattern type only include type/confidence/snippet; no title or explanation fields are evidenced, and only a single snippet is produced.",
+      "evidence": [
+        "frontend/src/analysis/detectPatterns.ts",
+        "backend/main.mo",
+        "frontend/src/components/patterns/RunAnalysisButton.tsx"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Save detected patterns with confidence scores and the text snippets that triggered them (associated to the entry being analyzed), and allow re-run analysis with consistent behavior (idempotent or versioned).",
+      "reason": "RunAnalysisButton saves patterns via useAddPattern without any entryId linkage, and the backend shows userPatterns keyed only by Principal (no per-entry association). No idempotent/versioning behavior is evidenced; patterns appear append-only.",
+      "evidence": [
+        "frontend/src/components/patterns/RunAnalysisButton.tsx",
+        "backend/main.mo",
+        "frontend/src/components/entries/EntryDetailView.tsx"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Dashboard cross-links: selecting a pattern shows relevant entries and the program days/tasks that address it.",
+      "reason": "PatternsDashboardView shows summary UI and window selection, but no evidence of drill-down/cross-linking to entries or program days/tasks is present in the provided truncated content; additionally, patterns do not appear entry-scoped in the backend, making entry cross-linking unclear.",
+      "evidence": [
+        "frontend/src/components/patterns/PatternsDashboardView.tsx",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "UI displays progress including a simple trend of mood rating over time.",
+      "reason": "ProgressSummary computes days completed, streak, and average mood, but no mood trend visualization is evidenced (e.g., sparkline/chart or time series).",
+      "evidence": [
+        "frontend/src/components/today/ProgressSummary.tsx"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "requirement": "Include generated logo + hero/background illustration as static assets in frontend/public/assets/generated and use them in app shell/onboarding/landing views.",
+      "reason": "The logo is referenced in AppLayout, but the diff summary does not provide evidence that the required image files exist at the specified path nor that the hero/background illustration is used anywhere.",
+      "evidence": [
+        "frontend/src/components/layout/AppLayout.tsx"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "requirement": "Data remains after canister upgrade (use stable structures/migration as needed).",
+      "reason": "backend/main.mo shows in-memory Maps/Lists for storage, but no stable variables, stable data structures, or upgrade hooks are evidenced in the truncated content.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "App footer includes external branding/link to caffeine.ai.",
+      "reason": "Not requested by the BuildRequest/requirements; adds unrelated outbound link/branding.",
+      "evidence": [
+        "frontend/src/components/layout/AppLayout.tsx"
+      ]
+    },
+    {
+      "description": "Admin-only habit library seeding and role/permission system using AccessControl/MixinAuthorization.",
+      "reason": "The BuildRequest requires Internet Identity scoping and persistence but does not request an admin role system or explicit permission model beyond per-user isolation.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Blob storage 'externalBlob' support in entries via blob-storage mixin.",
+      "reason": "REQ-1 allows image attachments as asset refs or base64 blobs; external blob storage integration is not explicitly requested and may exceed MVP scope.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/components/entries/EntryDetailView.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.68,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/analysis/detectPatterns.ts",
+    "frontend/src/analysis/patternTypes.ts",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/auth/ProfileSetupModal.tsx",
+    "frontend/src/components/common/AccessDeniedScreen.tsx",
+    "frontend/src/components/entries/AddEntryView.tsx",
+    "frontend/src/components/entries/EntriesListView.tsx",
+    "frontend/src/components/entries/EntryDetailView.tsx",
+    "frontend/src/components/habits/HabitLibraryView.tsx",
+    "frontend/src/components/layout/AppLayout.tsx",
+    "frontend/src/components/onboarding/OnboardingDialog.tsx",
+    "frontend/src/components/patterns/PatternsDashboardView.tsx",
+    "frontend/src/components/patterns/RunAnalysisButton.tsx",
+    "frontend/src/components/program/ProgramDayDetail.tsx",
+    "frontend/src/components/program/ProgramView.tsx",
+    "frontend/src/components/today/ProgressSummary.tsx",
+    "frontend/src/components/today/TodayCheckInView.tsx",
+    "frontend/src/data/habitLibrary.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/patterns/summarizePatterns.ts",
+    "frontend/src/program/generateProgram.ts",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

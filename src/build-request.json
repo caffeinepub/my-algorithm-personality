@@ -1,0 +1,221 @@
+{
+  "kind": "build_request",
+  "title": "My Algorithm Personality MVP: upload/paste activity, detect patterns, and generate a personalized 30-day habit program",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create an MVP app flow that lets a signed-in user (Internet Identity) provide their online-activity data via (a) pasted text and (b) optional screenshot/image uploads, and store each entry with timestamp, source label (e.g., “Shopping”, “Social feed”, “Messages”, “Browsing”), and optional user notes.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "be creative on that and generate patterns automatically",
+          "simplification is key do as much as you can"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can sign in with Internet Identity and see their own saved entries only.",
+        "User can create a new entry by pasting text, selecting a source label, and optionally adding notes.",
+        "User can attach one or more images to an entry (store as frontend asset references or base64 blobs as supported), and the UI clearly communicates that automated analysis is primarily based on text in this MVP.",
+        "User can view a list of their past entries and open an entry detail view."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement on-device/app-side (non-LLM) pattern detection from the user’s pasted text using transparent heuristics, producing multiple pattern types at once (at minimum: shopping/spending triggers, emotional tone signals, time-of-day habit hints, screen-time/scrolling cues, and cue-craving-reward feedback-loop language). Save detected patterns with confidence scores and the text snippets that triggered them.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "yes it should detect multiple pattern types at once",
+          "generate patterns automatically",
+          "psycho analysis and pull from reserch on feed back loops and addiction with social media etc."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Running analysis on a text entry produces 0..N detected patterns across at least 5 pattern types (shopping, emotional tone, time-of-day, screen-time/scrolling, feedback-loop/addiction cues).",
+        "Each detected pattern includes: type, title, short explanation, confidence (0–100), and 1–3 supporting snippets/keywords from the user text.",
+        "User can re-run analysis for an entry and see updated results (idempotent or versioned behavior is consistent).",
+        "No calls are made to external AI/LLM services or third-party analytics APIs for detection."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Create a curated in-app “Atomic Habit Library” (seed catalog) organized by goals/categories focused on presence and reversing negative loops (e.g., Digital Balance, Spending Awareness, Mindful Pausing, Sleep/Wind-down, Relationships/Connection, Focus/Deep Work, Emotional Regulation). Each habit includes: a tiny action, when-to-do cue, duration, difficulty, and a brief rationale grounded in habit/feedback-loop framing (Bruce Lipton-inspired tone allowed, but keep it practical and non-medical).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "look online to curate the library and create maybe a small catalog of these to work with most common",
+          "create different categories or goals for people to work on to be more present",
+          "Bruce Lipton is the inspiration"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Library exists in the app as structured data (not hardcoded only in UI text) and can be browsed by category.",
+        "Each category has at least 6 habits; total library has at least 30 habits.",
+        "Each habit item includes: name, atomic step, suggested cue, time estimate, difficulty, and rationale.",
+        "User-facing copy is in English and avoids claiming medical treatment/diagnosis."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Generate a personalized 30-day program for each user based on their detected patterns and the habit library. The program must assign one “Daily Micro-Task” per day, plus an optional “Reflection Prompt”, and explain why it was chosen (linked to detected patterns).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "give them a task or an atomic habit to work on the next day ... make it a 30 day program",
+          "it should be personalixed form detected patterns",
+          "tasks or atomic habits generate automatically based on the detected patterns"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can create a new 30-day program from their current detected patterns with one click.",
+        "Each day (1–30) has: task (from the library), reflection prompt, and a “why this today” explanation referencing one or more detected patterns.",
+        "Program generation is deterministic enough to be testable (e.g., same inputs generally yield similar category choices) while still allowing variety (e.g., rotation across categories).",
+        "User can view the full 30-day calendar/list and open day details."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement a daily check-in flow for the active 30-day program: mark task as done/not done, capture a 1–5 mood rating, optional short note, and whether the user reduced/avoided the targeted behavior that day. Show compounding progress over time.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "the user checks in every day show compounding progress"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can complete a check-in for the current day and edit it the same day.",
+        "UI displays progress: days completed, current streak, completion rate, and a simple trend of mood rating over time.",
+        "Program view clearly indicates completed vs pending days.",
+        "All check-in data is persisted per user and reloads correctly after refresh/sign-in."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Create a “Patterns Dashboard” that summarizes the user’s top detected loops/triggers over the last N entries (e.g., last 7/30), highlights most frequent pattern types, and shows which program tasks are targeting which patterns.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "use this as a mirror into the thought patterns and behaviors",
+          "reverse engineer their bad habits like too much online shopping"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dashboard shows: top pattern types, most common keywords/snippets, and a short plain-English summary per pattern type.",
+        "Dashboard cross-links: selecting a pattern shows relevant entries and the program days/tasks that address it.",
+        "User can adjust the time window (at least: last 7 vs last 30 entries)."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add a cohesive, visually appealing UI theme and information architecture optimized for ease of use: calm, presence-oriented styling (avoid blue/purple), clear onboarding, and minimal steps to (1) add data, (2) see patterns, (3) start program, (4) check in.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "make it visually appealing as well ... ease of use",
+          "simplification is key do as much as you can"
+        ]
+      },
+      "acceptanceCriteria": [
+        "App uses a consistent theme (e.g., warm neutrals + earthy accent) across all pages/components.",
+        "Primary navigation makes the 4 core actions discoverable: Add Entry, Patterns, Program, Check-in/Today.",
+        "On first use, user sees a short onboarding explaining what to paste/upload and what the app can/can’t infer in the MVP.",
+        "No user flow requires more than ~2 screens to reach core actions."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Generate and include minimal brand/static imagery for the MVP (logo + subtle background/hero illustration) and render them as static assets from the frontend.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "make it visually appealing as well"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images are placed in frontend/public/assets/generated and used in the app shell/onboarding/landing views.",
+        "Images are optimized for web and do not block readability (accessible contrast maintained)."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Backend persistence: store per-user entries, detected pattern results, habit library (seeded), active/previous programs, and daily check-ins in the single Motoko actor with stable storage as needed.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "create this platform for me",
+          "create ... workable usable application"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All user data is scoped to the authenticated principal; users cannot read/write other users’ data.",
+        "CRUD exists for: entries, analysis results, programs, and check-ins (at least create/read for MVP; update where needed for check-ins).",
+        "Data remains after canister upgrade (use stable structures/migration only if required by template)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not integrate directly with social media APIs (Instagram/X/Facebook/etc.); rely on user-provided text and optional uploads.",
+    "Do not call external AI/LLM services; pattern detection and program generation must be heuristic/rules-based using an in-app catalog.",
+    "Backend must remain a single Motoko actor (no additional backend services).",
+    "Use Internet Identity for authentication (no third-party auth providers).",
+    "Do not modify files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT; compose UI using those components instead."
+  ],
+  "nonGoals": [
+    "Automatic OCR/analysis of screenshot images in the MVP (images are accepted as attachments; analysis is based on user text).",
+    "“Pull data from the internet” or scrape/social-login imports; no web scraping or external data ingestion pipelines.",
+    "Clinical diagnosis, therapy claims, or medical advice features.",
+    "Real-time features (websockets/chat/push notifications)."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Minimalist wordmark logo with abstract “algorithm/personality” mark in warm neutral palette (map-logo.dim_512x512.png)",
+      "Soft calming hero/background illustration with subtle pattern (e.g., concentric loops/feedback circles) in earthy tones (map-hero-bg.dim_1600x900.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [
+      "Build a simplified, workable MVP of a self-improvement app that detects behavior patterns from user-provided text and generates a personalized 30-day program with daily check-ins."
+    ],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "Keep user-facing text in English.",
+      "Prefer a calm, presence-oriented visual theme using warm neutrals/earth tones (avoid blue/purple) and an easy-to-use UX."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [
+      "User wants multi-pattern detection and auto-generated atomic habits seeded by a curated in-app catalog inspired by habit/feedback-loop research and Bruce Lipton framing, simplified to what is feasible."
+    ],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

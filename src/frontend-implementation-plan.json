@@ -1,0 +1,300 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "My Algorithm Personality MVP (Frontend-only): Entries, Heuristic Patterns, 30-Day Program, Check-ins, Dashboard",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Signed-in flow to add online-activity entries (paste text + optional images), label/source, notes, and view entry list + detail.",
+      "acceptanceCriteria": [
+        "User can sign in with Internet Identity and see their own saved entries only.",
+        "User can create a new entry by pasting text, selecting a source label, and optionally adding notes.",
+        "User can attach one or more images to an entry (store as frontend asset references or base64 blobs as supported), and the UI clearly communicates that automated analysis is primarily based on text in this MVP.",
+        "User can view a list of their past entries and open an entry detail view."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app shell with authenticated gating using the authorization component (Internet Identity + profile requirement) and wire primary navigation to Add Entry, Patterns, Program, and Today/Check-in views. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/LoginButton.tsx",
+          "operation": "create",
+          "description": "Add a login/logout control using the authorization component’s Internet Identity flow and ensure logout clears cached react-query data. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/ProfileSetupModal.tsx",
+          "operation": "create",
+          "description": "Implement first-login profile setup (ask for name) using authorization component guidance to avoid modal flash and to call getCallerUserProfile/saveCallerUserProfile. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/entries/AddEntryView.tsx",
+          "operation": "create",
+          "description": "Create the Add Entry UI: pasted text input, source label picker (e.g., Shopping/Social feed/Messages/Browsing), optional notes, optional multiple image attachments, and submit handling. Use shadcn-ui components from the immutable ui folder for form controls and dialogs; compose only (do not modify ui components). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/entries/EntriesListView.tsx",
+          "operation": "create",
+          "description": "Create an entries list UI that fetches and displays the user’s entries (timestamp, source label, excerpt) and allows selecting an entry to open details. Use shadcn-ui components for list, cards, and loading states; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/entries/EntryDetailView.tsx",
+          "operation": "create",
+          "description": "Create an entry detail UI showing full text, source label, notes, timestamp, and any attached images. Clearly message that MVP analysis is primarily text-based and images are stored as attachments only. Use shadcn-ui components; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useActivityEntries.ts",
+          "operation": "create",
+          "description": "Add react-query hooks to call backend capabilities for getActivityEntries/getActivityEntry/addActivityEntry, including authenticated-only guards and user-friendly handling of authorization traps (e.g., show AccessDenied screen)."
+        },
+        {
+          "path": "frontend/src/hooks/useBlobs.ts",
+          "operation": "create",
+          "description": "Implement client-side helpers for image attachments using the blob-storage component’s ExternalBlob class (upload from bytes with progress; render via getDirectURL) and fallback to Uint8Array where appropriate. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/common/AccessDeniedScreen.tsx",
+          "operation": "create",
+          "description": "Create an AccessDenied screen for guests/unauthorized users per the authorization component guidance, and wire it into the authenticated gate. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "On-device heuristic pattern detection over pasted text with multiple pattern types, confidence scores, and supporting snippets; allow re-run and persist results.",
+      "acceptanceCriteria": [
+        "Running analysis on a text entry produces 0..N detected patterns across at least 5 pattern types (shopping, emotional tone, time-of-day, screen-time/scrolling, feedback-loop/addiction cues).",
+        "Each detected pattern includes: type, title, short explanation, confidence (0–100), and 1–3 supporting snippets/keywords from the user text.",
+        "User can re-run analysis for an entry and see updated results (idempotent or versioned behavior is consistent).",
+        "No calls are made to external AI/LLM services or third-party analytics APIs for detection."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/analysis/patternTypes.ts",
+          "operation": "create",
+          "description": "Define frontend pattern type constants and user-facing titles/explanations for at least: Shopping/Spending Triggers, Emotional Tone, Time-of-day Hints, Screen-time/Scrolling Cues, and Cue–Craving–Reward / Feedback-loop Language."
+        },
+        {
+          "path": "frontend/src/analysis/detectPatterns.ts",
+          "operation": "create",
+          "description": "Implement transparent heuristic/rules-based detection (no external services) that outputs multiple pattern types at once with confidence 0–100 and 1–3 supporting snippets/keywords per pattern."
+        },
+        {
+          "path": "frontend/src/hooks/usePatterns.ts",
+          "operation": "create",
+          "description": "Add react-query hooks for fetching and saving detected patterns via backend capabilities (getPatterns/addPattern) and for handling re-run behavior consistently (e.g., replace-by-type for an entry in local UI state, or append with clear timestamps in UI)."
+        },
+        {
+          "path": "frontend/src/components/patterns/RunAnalysisButton.tsx",
+          "operation": "create",
+          "description": "Add a UI control to run/re-run analysis for a selected entry, show progress, and write results via backend capability calls. Use shadcn-ui components for button, toasts/alerts; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/entries/EntryDetailView.tsx",
+          "operation": "modify",
+          "description": "Wire detected pattern display into the entry detail view: show 0..N patterns, each with type/title/explanation, confidence, and supporting snippets; include a re-run analysis action. Use shadcn-ui components; compose only. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Browse a curated Atomic Habit Library organized by categories with structured habit data rendered in the app.",
+      "acceptanceCriteria": [
+        "Library exists in the app as structured data (not hardcoded only in UI text) and can be browsed by category.",
+        "Each category has at least 6 habits; total library has at least 30 habits.",
+        "Each habit item includes: name, atomic step, suggested cue, time estimate, difficulty, and rationale.",
+        "User-facing copy is in English and avoids claiming medical treatment/diagnosis."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useHabitLibrary.ts",
+          "operation": "create",
+          "description": "Add react-query hook to load the habit library from backend capability getHabitLibrary, with empty-state messaging if not yet seeded."
+        },
+        {
+          "path": "frontend/src/components/habits/HabitLibraryView.tsx",
+          "operation": "create",
+          "description": "Create a browsable Habit Library UI grouped by category (Digital Balance, Spending Awareness, Mindful Pausing, Sleep/Wind-down, Relationships/Connection, Focus/Deep Work, Emotional Regulation). Use shadcn-ui tabs/accordion/cards; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire Habit Library access into the existing information architecture without adding unnecessary top-level flows (e.g., link from Program generation and/or Patterns views, and optionally from navigation overflow). Use shadcn-ui navigation primitives; compose only. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Generate a personalized deterministic-ish 30-day program from detected patterns and the habit library; display full program and day details.",
+      "acceptanceCriteria": [
+        "User can create a new 30-day program from their current detected patterns with one click.",
+        "Each day (1–30) has: task (from the library), reflection prompt, and a “why this today” explanation referencing one or more detected patterns.",
+        "Program generation is deterministic enough to be testable (e.g., same inputs generally yield similar category choices) while still allowing variety (e.g., rotation across categories).",
+        "User can view the full 30-day calendar/list and open day details."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/program/generateProgram.ts",
+          "operation": "create",
+          "description": "Implement a rules-based, deterministic-ish program generator that maps detected pattern types to habit categories, rotates categories for variety, assigns one Daily Micro-Task per day, and generates a reflection prompt + a ‘why this today’ explanation referencing patterns (no external services)."
+        },
+        {
+          "path": "frontend/src/hooks/useProgram.ts",
+          "operation": "create",
+          "description": "Add react-query hooks to load/create the user program via backend capabilities getProgram/createProgram and keep UI state consistent after generation."
+        },
+        {
+          "path": "frontend/src/components/program/ProgramView.tsx",
+          "operation": "create",
+          "description": "Create the 30-day program view (list/calendar-like layout) with per-day status indicators and the ability to open a day detail panel. Use shadcn-ui components; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/program/ProgramDayDetail.tsx",
+          "operation": "create",
+          "description": "Create a day detail UI showing the selected habit task (from the library), optional reflection prompt, and the ‘why this today’ explanation linked to detected patterns. Use shadcn-ui dialog/drawer; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire one-click program generation into the Program view using the current detected patterns + habit library data, and ensure navigation exposes Program as a core action. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Daily check-in flow for active program with mood rating, notes, reduced behavior flag, done/not done, editing same day, and progress metrics.",
+      "acceptanceCriteria": [
+        "User can complete a check-in for the current day and edit it the same day.",
+        "UI displays progress: days completed, current streak, completion rate, and a simple trend of mood rating over time.",
+        "Program view clearly indicates completed vs pending days.",
+        "All check-in data is persisted per user and reloads correctly after refresh/sign-in."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useCheckIns.ts",
+          "operation": "create",
+          "description": "Add react-query helpers for reading the current program checkIns from getProgram and writing daily updates with addCheckIn; keep same-day edits consistent in UI."
+        },
+        {
+          "path": "frontend/src/components/today/TodayCheckInView.tsx",
+          "operation": "create",
+          "description": "Create the Today/Check-in view: show today’s micro-task, mark done/not done, 1–5 mood rating, optional note, reduced/avoided behavior toggle, and allow same-day edit. Use shadcn-ui form controls; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/program/ProgramView.tsx",
+          "operation": "modify",
+          "description": "Update the program list to reflect completed vs pending days based on persisted check-ins, and deep-link/open Today view from the program where appropriate. Use shadcn-ui badges/progress; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/today/ProgressSummary.tsx",
+          "operation": "create",
+          "description": "Add progress summaries: days completed, current streak, completion rate, and a simple mood trend visualization (lightweight, no external analytics). Use shadcn-ui cards and basic SVG/canvas where needed; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire Today/Check-in as a primary navigation destination and ensure it is reachable within ~2 screens from app entry after login."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Patterns Dashboard summarizing top loops/triggers across a selectable recent window and cross-linking patterns to entries and program tasks.",
+      "acceptanceCriteria": [
+        "Dashboard shows: top pattern types, most common keywords/snippets, and a short plain-English summary per pattern type.",
+        "Dashboard cross-links: selecting a pattern shows relevant entries and the program days/tasks that address it.",
+        "User can adjust the time window (at least: last 7 vs last 30 entries)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/patterns/PatternsDashboardView.tsx",
+          "operation": "create",
+          "description": "Create the Patterns Dashboard UI: window selector (last 7 vs last 30 entries), top pattern types, common snippets/keywords, and short summaries. Use shadcn-ui components for controls and layout; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/patterns/summarizePatterns.ts",
+          "operation": "create",
+          "description": "Implement frontend summarization logic (non-LLM) to aggregate patterns by type, compute frequency/weights, extract common snippets/keywords, and produce plain-English summaries per type."
+        },
+        {
+          "path": "frontend/src/components/patterns/PatternDrilldownPanel.tsx",
+          "operation": "create",
+          "description": "Implement cross-link drilldown: selecting a pattern type shows relevant entries (filtered) and program days/tasks that target it. Use shadcn-ui dialog/drawer and list components; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire Patterns Dashboard into primary navigation as a core action and ensure it is reachable within ~2 screens from app entry after login."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Cohesive calm, presence-oriented theme and IA with minimal steps and onboarding guidance.",
+      "acceptanceCriteria": [
+        "App uses a consistent theme (e.g., warm neutrals + earthy accent) across all pages/components.",
+        "Primary navigation makes the 4 core actions discoverable: Add Entry, Patterns, Program, Check-in/Today.",
+        "On first use, user sees a short onboarding explaining what to paste/upload and what the app can/can’t infer in the MVP.",
+        "No user flow requires more than ~2 screens to reach core actions."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Add global Tailwind/base styles and CSS variables to establish a warm neutral + earthy accent theme (avoid blue/purple) while preserving accessible contrast."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust theme tokens (e.g., primary/accent/chart variables usage strategy) to support warm neutrals/earth tones consistently across the app."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "create",
+          "description": "Create a cohesive layout (header + nav + content) optimized for minimal steps and clarity. Use shadcn-ui primitives; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/onboarding/OnboardingDialog.tsx",
+          "operation": "create",
+          "description": "Implement first-use onboarding explaining what to paste/upload and what the MVP can/can’t infer (text-first; no OCR; no social API imports; no external AI/LLMs). Persist dismiss state in localStorage. Use shadcn-ui dialog; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Integrate AppLayout, show onboarding on first use, and ensure the 4 core actions are always discoverable from primary navigation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Include minimal brand/static imagery (logo + subtle hero background) as frontend static assets and render them in the app shell/onboarding.",
+      "acceptanceCriteria": [
+        "Generated images are placed in frontend/public/assets/generated and used in the app shell/onboarding/landing views.",
+        "Images are optimized for web and do not block readability (accessible contrast maintained)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/map-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated minimalist wordmark logo asset at this exact path and ensure it is referenced from the UI as a static asset."
+        },
+        {
+          "path": "frontend/public/assets/generated/map-hero-bg.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated soft hero/background illustration asset at this exact path and ensure it is referenced from the UI as a static asset."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Render the static logo from frontend/public/assets/generated/map-logo.dim_512x512.png in the header and incorporate the hero/background image frontend/public/assets/generated/map-hero-bg.dim_1600x900.png subtly (non-blocking, readable contrast). Use shadcn-ui layout primitives; compose only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/onboarding/OnboardingDialog.tsx",
+          "operation": "modify",
+          "description": "Reference frontend/public/assets/generated/map-hero-bg.dim_1600x900.png and/or frontend/public/assets/generated/map-logo.dim_512x512.png in onboarding for branding while maintaining readable contrast."
+        }
+      ]
+    }
+  ]
+}
