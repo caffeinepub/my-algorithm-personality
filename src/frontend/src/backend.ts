@@ -171,6 +171,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     seedHabitLibrary(newLibrary: Array<Habit>): Promise<void>;
+    updateFullProgram(newProgram: Array<DailyProgramEntry>, newCheckIns: Array<DailyCheckIn>): Promise<void>;
 }
 import type { DailyCheckIn as _DailyCheckIn, DailyProgramEntry as _DailyProgramEntry, ExternalBlob as _ExternalBlob, Habit as _Habit, OnlineActivityEntry as _OnlineActivityEntry, Program as _Program, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -494,6 +495,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.seedHabitLibrary(arg0);
+            return result;
+        }
+    }
+    async updateFullProgram(arg0: Array<DailyProgramEntry>, arg1: Array<DailyCheckIn>): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateFullProgram(to_candid_vec_n17(this._uploadFile, this._downloadFile, arg0), to_candid_vec_n20(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateFullProgram(to_candid_vec_n17(this._uploadFile, this._downloadFile, arg0), to_candid_vec_n20(this._uploadFile, this._downloadFile, arg1));
             return result;
         }
     }

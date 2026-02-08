@@ -2,16 +2,13 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-an-mvp-app-flow-that-lets-a-signed-in-user-internet-identity-provide-their-online-activity-data-via-a-pasted-text-and-b-optional-screenshot-image-uploads-and-store-each-entry-with-timestamp-source-label-e-g-shopping-social-feed-messages-browsing-and-optional-user-notes",
-      "featureTitle": "Create an MVP app flow that lets a signed-in user (Internet Identity) provide their online-activity data via (a) pasted text and (b) optional screenshot/image uploads, and store each entry with timestamp, source label (e.g., “Shopping”, “Social feed”, “Messages”, “Browsing”), and optional user notes.",
+      "featureId": "feature-expand-the-patterns-dashboard-to-include-additional-analytics-sections-as-new-visual-sections-not-replacing-existing-ones-covering-1-emotional-trends-over-time-2-shopping-spending-triggers-over-time-and-3-morning-vs-night-pattern-distribution-using-the-existing-7-30-day-window-selector",
+      "featureTitle": "Expand the Patterns Dashboard to include additional analytics sections (as new visual sections, not replacing existing ones) covering: (1) emotional trends over time, (2) shopping/spending triggers over time, and (3) morning vs night pattern distribution, using the existing 7/30 day window selector.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/auth/LoginButton.tsx",
-        "frontend/src/components/auth/ProfileSetupModal.tsx",
-        "frontend/src/components/common/AccessDeniedScreen.tsx",
-        "frontend/src/components/entries/AddEntryView.tsx",
-        "frontend/src/components/entries/EntriesListView.tsx",
-        "frontend/src/components/entries/EntryDetailView.tsx"
+        "frontend/src/components/patterns/PatternsDashboardView.tsx",
+        "frontend/src/components/patterns/insights/EmotionalTrendsSection.tsx",
+        "frontend/src/components/patterns/insights/MorningNightDistributionSection.tsx",
+        "frontend/src/components/patterns/insights/SpendingTriggersSection.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -23,18 +20,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-10"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-on-device-app-side-non-llm-pattern-detection-from-the-user-s-pasted-text-using-transparent-heuristics-producing-multiple-pattern-types-at-once-at-minimum-shopping-spending-triggers-emotional-tone-signals-time-of-day-habit-hints-screen-time-scrolling-cues-and-cue-craving-reward-feedback-loop-language-save-detected-patterns-with-confidence-scores-and-the-text-snippets-that-triggered-them",
-      "featureTitle": "Implement on-device/app-side (non-LLM) pattern detection from the user’s pasted text using transparent heuristics, producing multiple pattern types at once (at minimum: shopping/spending triggers, emotional tone signals, time-of-day habit hints, screen-time/scrolling cues, and cue-craving-reward feedback-loop language). Save detected patterns with confidence scores and the text snippets that triggered them.",
+      "featureId": "feature-implement-dashboard-side-insight-calculations-non-llm-transparent-heuristics-that-derive-the-new-analytics-from-existing-stored-patterns-and-where-needed-recent-activity-entries-and-expose-them-to-the-patterns-dashboard-ui-in-a-reusable-way",
+      "featureTitle": "Implement dashboard-side insight calculations (non-LLM, transparent heuristics) that derive the new analytics from existing stored Patterns (and where needed, recent Activity Entries), and expose them to the Patterns Dashboard UI in a reusable way.",
       "files": [
-        "frontend/src/analysis/detectPatterns.ts",
-        "frontend/src/analysis/patternTypes.ts",
-        "frontend/src/components/entries/EntryDetailView.tsx",
-        "frontend/src/components/patterns/RunAnalysisButton.tsx"
+        "frontend/src/analysis/dashboardInsights.ts",
+        "frontend/src/components/patterns/PatternsDashboardView.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -46,38 +41,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-11"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-curated-in-app-atomic-habit-library-seed-catalog-organized-by-goals-categories-focused-on-presence-and-reversing-negative-loops-e-g-digital-balance-spending-awareness-mindful-pausing-sleep-wind-down-relationships-connection-focus-deep-work-emotional-regulation-each-habit-includes-a-tiny-action-when-to-do-cue-duration-difficulty-and-a-brief-rationale-grounded-in-habit-feedback-loop-framing-bruce-lipton-inspired-tone-allowed-but-keep-it-practical-and-non-medical",
-      "featureTitle": "Create a curated in-app “Atomic Habit Library” (seed catalog) organized by goals/categories focused on presence and reversing negative loops (e.g., Digital Balance, Spending Awareness, Mindful Pausing, Sleep/Wind-down, Relationships/Connection, Focus/Deep Work, Emotional Regulation). Each habit includes: a tiny action, when-to-do cue, duration, difficulty, and a brief rationale grounded in habit/feedback-loop framing (Bruce Lipton-inspired tone allowed, but keep it practical and non-medical).",
+      "featureId": "feature-make-patterns-dashboard-insights-automatically-influence-and-update-the-user-s-personalized-30-day-program-by-regenerating-the-program-when-new-patterns-materially-change-the-insight-signals-while-preserving-already-recorded-daily-check-ins",
+      "featureTitle": "Make Patterns Dashboard insights automatically influence and update the user’s personalized 30‑day program by regenerating the program when new patterns materially change the insight signals, while preserving already-recorded daily check-ins.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/habits/HabitLibraryView.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-generate-a-personalized-30-day-program-for-each-user-based-on-their-detected-patterns-and-the-habit-library-the-program-must-assign-one-daily-micro-task-per-day-plus-an-optional-reflection-prompt-and-explain-why-it-was-chosen-linked-to-detected-patterns",
-      "featureTitle": "Generate a personalized 30-day program for each user based on their detected patterns and the habit library. The program must assign one “Daily Micro-Task” per day, plus an optional “Reflection Prompt”, and explain why it was chosen (linked to detected patterns).",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/program/ProgramDayDetail.tsx",
+        "frontend/src/analysis/dashboardInsights.ts",
         "frontend/src/components/program/ProgramView.tsx",
+        "frontend/src/hooks/useQueries.ts",
         "frontend/src/program/generateProgram.ts"
       ],
       "components": [
@@ -90,62 +64,18 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-4"
+        "REQ-12"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-a-daily-check-in-flow-for-the-active-30-day-program-mark-task-as-done-not-done-capture-a-1-5-mood-rating-optional-short-note-and-whether-the-user-reduced-avoided-the-targeted-behavior-that-day-show-compounding-progress-over-time",
-      "featureTitle": "Implement a daily check-in flow for the active 30-day program: mark task as done/not done, capture a 1–5 mood rating, optional short note, and whether the user reduced/avoided the targeted behavior that day. Show compounding progress over time.",
+      "featureId": "feature-upgrade-the-app-s-layout-and-visual-design-to-feel-more-polished-and-high-impact-inspired-by-the-feel-movement-of-tony-robbins-atomic-habits-sites-while-staying-within-the-existing-calm-warm-neutral-palette-avoid-blue-purple-and-without-changing-core-navigation-or-features",
+      "featureTitle": "Upgrade the app’s layout and visual design to feel more polished and high-impact (inspired by the feel/movement of Tony Robbins / Atomic Habits sites) while staying within the existing calm, warm-neutral palette (avoid blue/purple) and without changing core navigation or features.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/program/ProgramView.tsx",
-        "frontend/src/components/today/ProgressSummary.tsx",
-        "frontend/src/components/today/TodayCheckInView.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-patterns-dashboard-that-summarizes-the-user-s-top-detected-loops-triggers-over-the-last-n-entries-e-g-last-7-30-highlights-most-frequent-pattern-types-and-shows-which-program-tasks-are-targeting-which-patterns",
-      "featureTitle": "Create a “Patterns Dashboard” that summarizes the user’s top detected loops/triggers over the last N entries (e.g., last 7/30), highlights most frequent pattern types, and shows which program tasks are targeting which patterns.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/patterns/PatternsDashboardView.tsx",
-        "frontend/src/patterns/summarizePatterns.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-cohesive-visually-appealing-ui-theme-and-information-architecture-optimized-for-ease-of-use-calm-presence-oriented-styling-avoid-blue-purple-clear-onboarding-and-minimal-steps-to-1-add-data-2-see-patterns-3-start-program-4-check-in",
-      "featureTitle": "Add a cohesive, visually appealing UI theme and information architecture optimized for ease of use: calm, presence-oriented styling (avoid blue/purple), clear onboarding, and minimal steps to (1) add data, (2) see patterns, (3) start program, (4) check in.",
-      "files": [
-        "frontend/src/App.tsx",
         "frontend/src/components/layout/AppLayout.tsx",
-        "frontend/src/components/onboarding/OnboardingDialog.tsx",
+        "frontend/src/components/patterns/PatternsDashboardView.tsx",
+        "frontend/src/components/program/ProgramView.tsx",
+        "frontend/src/components/today/TodayCheckInView.tsx",
         "frontend/src/index.css",
         "frontend/tailwind.config.js"
       ],
@@ -159,16 +89,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-7"
+        "REQ-13"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-generate-and-include-minimal-brand-static-imagery-for-the-mvp-logo-subtle-background-hero-illustration-and-render-them-as-static-assets-from-the-frontend",
-      "featureTitle": "Generate and include minimal brand/static imagery for the MVP (logo + subtle background/hero illustration) and render them as static assets from the frontend.",
+      "featureId": "feature-update-the-existing-generated-hero-background-and-or-logo-imagery-to-better-match-the-upgraded-high-impact-design-direction-keeping-the-same-filenames-in-assets-generated-used-by-the-app",
+      "featureTitle": "Update the existing generated hero/background and/or logo imagery to better match the upgraded high-impact design direction, keeping the same filenames in /assets/generated used by the app.",
       "files": [
-        "frontend/src/components/layout/AppLayout.tsx",
-        "frontend/src/components/onboarding/OnboardingDialog.tsx"
+        "frontend/src/components/layout/AppLayout.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -180,7 +109,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-8"
+        "REQ-14"
       ],
       "confidence": "high"
     }

@@ -10,7 +10,9 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   type Habit = {
     id : Text;
@@ -217,5 +219,17 @@ actor {
         userPrograms.add(caller, newProgram);
       };
     };
+  };
+
+  public shared ({ caller }) func updateFullProgram(newProgram : [DailyProgramEntry], newCheckIns : [DailyCheckIn]) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can update their program");
+    };
+
+    let newFullProgram : Program = {
+      days = newProgram;
+      checkIns = newCheckIns;
+    };
+    userPrograms.add(caller, newFullProgram);
   };
 };

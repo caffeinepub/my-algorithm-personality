@@ -1,4 +1,5 @@
 import type { Pattern, Habit, Program, DailyProgramEntry } from '../backend';
+import type { InsightSignature } from '../analysis/dashboardInsights';
 
 const CATEGORY_MAPPING: Record<string, string[]> = {
   'Shopping & Spending Triggers': ['Spending Awareness', 'Mindful Pausing'],
@@ -16,7 +17,11 @@ const REFLECTION_PROMPTS = [
   'How has this habit changed your awareness today?',
 ];
 
-export function generateProgram(patterns: Pattern[], habitLibrary: Habit[]): Program {
+export function generateProgram(
+  patterns: Pattern[],
+  habitLibrary: Habit[],
+  insightSignals?: InsightSignature
+): Program {
   // Determine which categories to focus on based on patterns
   const categoryPriority = new Map<string, number>();
   
@@ -24,6 +29,19 @@ export function generateProgram(patterns: Pattern[], habitLibrary: Habit[]): Pro
     const categories = CATEGORY_MAPPING[pattern.patternType] || [];
     for (const category of categories) {
       categoryPriority.set(category, (categoryPriority.get(category) || 0) + Number(pattern.confidenceScore));
+    }
+  }
+
+  // Boost certain categories based on insight signals
+  if (insightSignals) {
+    if (insightSignals.spendingFrequency === 'high') {
+      categoryPriority.set('Spending Awareness', (categoryPriority.get('Spending Awareness') || 0) + 50);
+    }
+    if (insightSignals.emotionalBalance === 'negative') {
+      categoryPriority.set('Emotional Regulation', (categoryPriority.get('Emotional Regulation') || 0) + 50);
+    }
+    if (insightSignals.timePreference === 'night') {
+      categoryPriority.set('Sleep & Wind-down', (categoryPriority.get('Sleep & Wind-down') || 0) + 50);
     }
   }
 
@@ -54,7 +72,7 @@ export function generateProgram(patterns: Pattern[], habitLibrary: Habit[]): Pro
     const habitIndex = Math.floor((day - 1) / targetCategories.length) % categoryHabits.length;
     const habit = categoryHabits[habitIndex];
     
-    // Generate explanation based on patterns
+    // Generate explanation based on patterns and insights
     const relevantPatterns = patterns.filter(p => {
       const cats = CATEGORY_MAPPING[p.patternType] || [];
       return cats.includes(category);
@@ -64,6 +82,19 @@ export function generateProgram(patterns: Pattern[], habitLibrary: Habit[]): Pro
     if (relevantPatterns.length > 0) {
       const patternType = relevantPatterns[0].patternType;
       explanation = `Based on your detected ${patternType.toLowerCase()}, this habit helps break that loop and build healthier patterns.`;
+    }
+
+    // Add insight-driven context
+    if (insightSignals) {
+      if (category === 'Spending Awareness' && insightSignals.spendingFrequency === 'high') {
+        explanation += ' Your recent activity shows high exposure to shopping triggers.';
+      }
+      if (category === 'Emotional Regulation' && insightSignals.emotionalBalance === 'negative') {
+        explanation += ' This will help improve your emotional well-being.';
+      }
+      if (category === 'Sleep & Wind-down' && insightSignals.timePreference === 'night') {
+        explanation += ' Your nighttime activity suggests this habit is especially important.';
+      }
     }
     
     // Add reflection prompt every 3 days

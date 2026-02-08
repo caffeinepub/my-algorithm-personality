@@ -1,18 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Build an MVP that lets signed-in users submit online-activity text (and optional image attachments), detect multiple behavioral patterns with transparent heuristics, and generate a personalized 30-day habit program with daily check-ins and a patterns dashboard.
+**Goal:** Enhance the Patterns Dashboard with additional explainable insights, auto-adapt the personalized 30‑day program based on those insights, and refresh the UI to a more polished, high-impact feel while keeping the existing navigation and warm-neutral palette.
 
 **Planned changes:**
-- Add Internet Identity sign-in and per-user data scoping.
-- Create an entry flow to paste activity text, choose a source label, add optional notes, attach one or more images, and persist entries with timestamps.
-- Implement entry list + entry detail views, including attached images and stored analysis results.
-- Implement on-device/app-side heuristic pattern detection for at least: shopping/spending triggers, emotional tone signals, time-of-day hints, screen-time/scrolling cues, and feedback-loop/addiction language; save patterns with confidence and supporting snippets.
-- Add a structured, seeded “Atomic Habit Library” browsable by category (≥7 categories, ≥6 habits each, ≥30 total) with: tiny action, cue, duration, difficulty, and practical rationale.
-- Generate a personalized 30-day program from detected patterns and the habit library (one daily micro-task + optional reflection prompt + “why this today” linking to patterns), and provide a program calendar/list with day details.
-- Implement daily check-ins for the active program (done/not done, mood 1–5, optional note, reduced/avoided targeted behavior), editable same day, with persisted progress and simple metrics (streak, completion rate, mood trend).
-- Create a Patterns Dashboard summarizing top patterns over a selectable window (last 7 vs last 30 entries), showing common snippets/keywords and cross-linking to related entries and program days/tasks.
-- Apply a cohesive calm, presence-oriented UI theme (warm neutrals/earth tones; avoid blue/purple), minimal navigation for the 4 core actions (Add Entry, Patterns, Program, Today/Check-in), and a short first-use onboarding clarifying MVP limitations (text-based analysis; images stored only).
-- Add minimal brand/static imagery (logo + subtle hero/background) as frontend static assets and use them in the app shell/onboarding/landing.
+- Add three new visual analytics sections to the existing Patterns Dashboard: Emotional trends over time, Spending/Shopping triggers over time, and Morning vs Night pattern distribution, all driven by the existing 7/30 day selector and including section-level empty states when data is insufficient.
+- Implement deterministic, transparent dashboard-side insight calculations based on existing stored Patterns (and where needed, recent Activity Entries), exposed in a reusable way for the dashboard UI while keeping the current top-level dashboard summary unchanged.
+- Regenerate the user’s personalized 30‑day program automatically when new/updated patterns materially change insight signals, while preserving already-recorded daily check-ins and doing nothing if there is no active program.
+- Update layout/design for more editorial hierarchy (typography, spacing, section headers) and add subtle CSS/Tailwind motion (hover/transition/reveal/tab transitions) while staying mobile-friendly, English-only, warm-neutral (no blue/purple), and without changing core navigation/features.
+- Update existing generated hero/background and logo imagery to better match the new high-impact design direction while keeping the same asset paths/filenames referenced by the app.
 
-**User-visible outcome:** A user can sign in, paste their online-activity text (optionally attach screenshots), see automatically detected pattern insights, generate a personalized 30-day micro-habit plan, complete daily check-ins with progress tracking, and review a dashboard that ties recurring patterns to entries and program tasks.
+**User-visible outcome:** The dashboard shows new insight sections that respond to the Last 7/Last 30 toggle, the 30‑day program updates itself when patterns meaningfully change (without losing past check-ins), and the app feels more premium and dynamic while retaining the same navigation and warm-neutral look.

@@ -78,4 +78,5 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     seedHabitLibrary(newLibrary: Array<Habit>): Promise<void>;
+    updateFullProgram(newProgram: Array<DailyProgramEntry>, newCheckIns: Array<DailyCheckIn>): Promise<void>;
 }

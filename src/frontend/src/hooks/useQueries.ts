@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { UserProfile, OnlineActivityEntry, Pattern, Program, Habit, DailyCheckIn } from '../backend';
+import type { UserProfile, OnlineActivityEntry, Pattern, Program, Habit, DailyCheckIn, DailyProgramEntry } from '../backend';
 import { ExternalBlob } from '../backend';
 
 export function useGetCallerUserProfile() {
@@ -166,6 +166,21 @@ export function useCreateProgram() {
     mutationFn: async (program: Program) => {
       if (!actor) throw new Error('Actor not available');
       return actor.createProgram(program);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['program'] });
+    },
+  });
+}
+
+export function useUpdateFullProgram() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (params: { days: DailyProgramEntry[]; checkIns: DailyCheckIn[] }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateFullProgram(params.days, params.checkIns);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['program'] });

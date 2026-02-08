@@ -1,16 +1,17 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
+  "projectStateVersion": 5,
   "summary": "Build a self-improvement app (\"My Algorithm Personality\") that lets users upload/paste their online activity data (screenshots/text) to automatically detect multiple habit/behavior patterns and generate a personalized 30-day program with daily check-ins and auto-generated atomic habit tasks, using a curated library inspired by habit psychology/feedback loops and Bruce Lipton; prioritize a visually appealing, easy-to-use UI and simplify features to what’s workable.",
   "architectural_notes": [
     "Avoid direct social media API integrations; rely on user-provided screenshots/text uploads as the core data source.",
-    "MVP should prioritize simplification to ensure a workable end-to-end flow: ingest data → detect patterns → generate plan/tasks → daily check-ins → progress view."
+    "MVP should prioritize simplification to ensure a workable end-to-end flow: ingest data → detect patterns → generate plan/tasks → daily check-ins → progress view.",
+    "Patterns Dashboard will include additional analytics sections (trends/segments) and feed those insights back into the 30-day program generation/update logic (adaptive planning loop)."
   ],
   "known_issues": [
     "Initial attempt to \"build it\" failed due to platform limitations; requires simplified MVP scope."
   ],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Minimalist wordmark logo with abstract “algorithm/personality” mark in warm neutral palette (map-logo.dim_512x512.png)\n- Soft calming hero/background illustration with subtle pattern (e.g., concentric loops/feedback circles) in earthy tones (map-hero-bg.dim_1600x900.png)",
+  "imageRequirements": "## Edit Images\n- Increase contrast and add more dynamic, high-impact abstract movement while keeping earthy tones (map-hero-bg.dim_1600x900.png > map-hero-bg.dim_1600x900.png)\n- Refine the mark/wordmark for a bolder, more premium look in warm neutrals (map-logo.dim_512x512.png > map-logo.dim_512x512.png)",
   "existing_features": [
     {
       "id": "feature-create-an-mvp-app-flow-that-lets-a-signed-in-user-internet-identity-provide-their-online-activity-data-via-a-pasted-text-and-b-optional-screenshot-image-uploads-and-store-each-entry-with-timestamp-source-label-e-g-shopping-social-feed-messages-browsing-and-optional-user-notes",
@@ -75,6 +76,46 @@
         "REQ-8"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-expand-the-patterns-dashboard-to-include-additional-analytics-sections-as-new-visual-sections-not-replacing-existing-ones-covering-1-emotional-trends-over-time-2-shopping-spending-triggers-over-time-and-3-morning-vs-night-pattern-distribution-using-the-existing-7-30-day-window-selector",
+      "title": "Expand the Patterns Dashboard to include additional analytics sections (as new visual sections, not replacing existing ones) covering: (1) emotional trends over time, (2) shopping/spending triggers over time, and (3) morning vs night pattern distribution, using the existing 7/30 day window selector.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-dashboard-side-insight-calculations-non-llm-transparent-heuristics-that-derive-the-new-analytics-from-existing-stored-patterns-and-where-needed-recent-activity-entries-and-expose-them-to-the-patterns-dashboard-ui-in-a-reusable-way",
+      "title": "Implement dashboard-side insight calculations (non-LLM, transparent heuristics) that derive the new analytics from existing stored Patterns (and where needed, recent Activity Entries), and expose them to the Patterns Dashboard UI in a reusable way.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-patterns-dashboard-insights-automatically-influence-and-update-the-user-s-personalized-30-day-program-by-regenerating-the-program-when-new-patterns-materially-change-the-insight-signals-while-preserving-already-recorded-daily-check-ins",
+      "title": "Make Patterns Dashboard insights automatically influence and update the user’s personalized 30‑day program by regenerating the program when new patterns materially change the insight signals, while preserving already-recorded daily check-ins.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-upgrade-the-app-s-layout-and-visual-design-to-feel-more-polished-and-high-impact-inspired-by-the-feel-movement-of-tony-robbins-atomic-habits-sites-while-staying-within-the-existing-calm-warm-neutral-palette-avoid-blue-purple-and-without-changing-core-navigation-or-features",
+      "title": "Upgrade the app’s layout and visual design to feel more polished and high-impact (inspired by the feel/movement of Tony Robbins / Atomic Habits sites) while staying within the existing calm, warm-neutral palette (avoid blue/purple) and without changing core navigation or features.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-existing-generated-hero-background-and-or-logo-imagery-to-better-match-the-upgraded-high-impact-design-direction-keeping-the-same-filenames-in-assets-generated-used-by-the-app",
+      "title": "Update the existing generated hero/background and/or logo imagery to better match the upgraded high-impact design direction, keeping the same filenames in /assets/generated used by the app.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -120,6 +161,24 @@
       "reqIds": [
         "REQ-9"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Enhance Patterns Dashboard with additional analytics/insights (e.g., emotional trends, spending triggers over time, morning vs night patterns) as new visual sections",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Make Patterns Dashboard insights automatically influence/update the personalized 30-day program (adaptive program adjustments based on new analytics)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Upgrade UI/graphic design for a more polished, high-impact layout with modern “feel and movement” inspired by Tony Robbins / Atomic Habits style, within platform capabilities",
+      "reqIds": [],
       "status": "pending"
     }
   ],

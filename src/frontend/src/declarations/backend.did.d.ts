@@ -101,6 +101,10 @@ export interface _SERVICE {
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'seedHabitLibrary' : ActorMethod<[Array<Habit>], undefined>,
+  'updateFullProgram' : ActorMethod<
+    [Array<DailyProgramEntry>, Array<DailyCheckIn>],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

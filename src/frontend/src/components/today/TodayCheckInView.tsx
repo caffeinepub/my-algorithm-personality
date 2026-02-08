@@ -79,13 +79,18 @@ export default function TodayCheckInView() {
   if (!program) {
     return (
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold tracking-tight mb-6">Today's Check-in</h2>
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No active program</h3>
-            <p className="text-sm text-muted-foreground text-center">
-              Generate your 30-day program to start your daily check-ins.
+        <div className="mb-8">
+          <h2 className="text-4xl font-bold tracking-tight mb-2">Today's Check-in</h2>
+          <p className="text-lg text-muted-foreground">Start your transformation journey</p>
+        </div>
+        <Card className="border-2 border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <div className="rounded-full bg-primary/10 p-6 mb-6">
+              <Calendar className="h-12 w-12 text-primary" />
+            </div>
+            <h3 className="text-2xl font-semibold mb-3">No active program</h3>
+            <p className="text-muted-foreground text-center max-w-md">
+              Generate your 30-day program to start your daily check-ins and track your progress.
             </p>
           </CardContent>
         </Card>
@@ -95,14 +100,14 @@ export default function TodayCheckInView() {
 
   if (currentDay > 30) {
     return (
-      <div className="max-w-4xl mx-auto space-y-6">
-        <h2 className="text-3xl font-bold tracking-tight">Program Complete! 🎉</h2>
-        <Card>
-          <CardContent className="py-12 text-center">
-            <CheckCircle2 className="h-16 w-16 text-primary mx-auto mb-4" />
-            <h3 className="text-2xl font-semibold mb-2">Congratulations!</h3>
-            <p className="text-muted-foreground">
-              You've completed your 30-day transformation journey.
+      <div className="max-w-4xl mx-auto space-y-8">
+        <h2 className="text-4xl font-bold tracking-tight">Program Complete! 🎉</h2>
+        <Card className="border-2 border-primary/20 bg-primary/5">
+          <CardContent className="py-16 text-center">
+            <CheckCircle2 className="h-20 w-20 text-primary mx-auto mb-6" />
+            <h3 className="text-3xl font-bold mb-3">Congratulations!</h3>
+            <p className="text-lg text-muted-foreground max-w-md mx-auto">
+              You've completed your 30-day transformation journey. Celebrate your progress!
             </p>
           </CardContent>
         </Card>
@@ -112,10 +117,10 @@ export default function TodayCheckInView() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Today's Check-in</h2>
-        <p className="text-muted-foreground mt-2">
+        <h2 className="text-4xl font-bold tracking-tight mb-2">Today's Check-in</h2>
+        <p className="text-lg text-muted-foreground">
           Day {currentDay} of 30
         </p>
       </div>
@@ -123,51 +128,52 @@ export default function TodayCheckInView() {
       <ProgressSummary program={program} />
 
       {todayEntry && (
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg">
           <CardHeader>
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary">Day {currentDay}</Badge>
-                  <Badge variant="outline" className="gap-1">
-                    <Clock className="h-3 w-3" />
+                <div className="flex items-center gap-3 mb-3">
+                  <Badge variant="secondary" className="text-sm px-3 py-1">Day {currentDay}</Badge>
+                  <Badge variant="outline" className="gap-1.5 text-sm px-3 py-1">
+                    <Clock className="h-3.5 w-3.5" />
                     {Number(todayEntry.task.duration)} min
                   </Badge>
                 </div>
-                <CardTitle className="text-xl">{todayEntry.task.action}</CardTitle>
-                <CardDescription className="mt-1">{todayEntry.task.whenToCue}</CardDescription>
+                <CardTitle className="text-2xl mb-2">{todayEntry.task.action}</CardTitle>
+                <CardDescription className="text-base">{todayEntry.task.whenToCue}</CardDescription>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <p className="text-sm text-muted-foreground">{todayEntry.task.rationale}</p>
+          <CardContent className="space-y-8">
+            <div className="rounded-lg bg-muted/50 p-4">
+              <p className="text-sm leading-relaxed">{todayEntry.task.rationale}</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6 border-t border-border pt-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="completed" className="text-base">Task Completed</Label>
+            <form onSubmit={handleSubmit} className="space-y-8 border-t border-border pt-8">
+              <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30 transition-colors hover:bg-muted/50">
+                <div className="space-y-1">
+                  <Label htmlFor="completed" className="text-base font-semibold">Task Completed</Label>
                   <p className="text-sm text-muted-foreground">Did you complete today's habit?</p>
                 </div>
                 <Switch
                   id="completed"
                   checked={taskCompleted}
                   onCheckedChange={setTaskCompleted}
+                  className="data-[state=checked]:bg-primary"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label>Mood Rating</Label>
-                <div className="flex gap-2">
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Mood Rating</Label>
+                <div className="flex gap-3">
                   {[1, 2, 3, 4, 5].map((rating) => (
                     <Button
                       key={rating}
                       type="button"
                       variant={moodRating === rating ? 'default' : 'outline'}
-                      size="sm"
+                      size="lg"
                       onClick={() => setMoodRating(rating)}
-                      className="flex-1"
+                      className="flex-1 text-lg font-semibold transition-all hover:scale-105"
                     >
                       {rating}
                     </Button>
@@ -176,33 +182,34 @@ export default function TodayCheckInView() {
                 <p className="text-xs text-muted-foreground">1 = Low, 5 = Great</p>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="reduced" className="text-base">Reduced Behavior</Label>
+              <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30 transition-colors hover:bg-muted/50">
+                <div className="space-y-1">
+                  <Label htmlFor="reduced" className="text-base font-semibold">Reduced Behavior</Label>
                   <p className="text-sm text-muted-foreground">Did you avoid the targeted habit today?</p>
                 </div>
                 <Switch
                   id="reduced"
                   checked={reducedBehavior}
                   onCheckedChange={setReducedBehavior}
+                  className="data-[state=checked]:bg-primary"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="notes">Notes (Optional)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="notes" className="text-base font-semibold">Notes (Optional)</Label>
                 <Textarea
                   id="notes"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="How did it go? Any insights or challenges?"
-                  className="min-h-[100px]"
+                  className="min-h-[120px] text-base"
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={addCheckIn.isPending}>
+              <Button type="submit" className="w-full text-base py-6" size="lg" disabled={addCheckIn.isPending}>
                 {addCheckIn.isPending ? (
                   <>
-                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
                     Saving...
                   </>
                 ) : existingCheckIn ? (
